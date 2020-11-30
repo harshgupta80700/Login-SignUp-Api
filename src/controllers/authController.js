@@ -1,13 +1,7 @@
-const express =  require('express')
-const router = new express.Router
-const controller =  require('../controllers/userController')
 const User = require('../models/user')
 
-router.get('/testUser',(req,res)=>{
-    res.send("This is a test route")
-})
 
-router.post('/addUser',async (req,res)=>{
+const createUser = async (req,res,next) => {
     const user =  new User(req.body)
     console.log(user)
     try{
@@ -34,10 +28,9 @@ router.post('/addUser',async (req,res)=>{
             data: e.message
         })
     }
-})
+};
 
-
-router.delete('/deleteAll',async(req,res,next)=>{
+const deleteAllUsers = async(req,res,next)=>{
     try{
         await User.deleteMany({})
         console.log("all deleted")
@@ -51,9 +44,9 @@ router.delete('/deleteAll',async(req,res,next)=>{
             status: "Error"
         })
     }
-})
+}
 
-router.get('/getAllUsers',async(req,res,next)=>{
+const getAllUsers = async(req,res,next)=>{
     try{
         const users = await User.find({})
         console.log(users);
@@ -68,9 +61,9 @@ router.get('/getAllUsers',async(req,res,next)=>{
             message: e.message
         })
     }
-})
+}
 
-router.post('/login',async(req,res,next)=>{
+const login = async(req,res,next)=>{
     try{
         const user = await User.findOne({email: req.body.email})
         if(!user){
@@ -92,9 +85,7 @@ router.post('/login',async(req,res,next)=>{
         
     }
 
-})
+}
 
 
-
-
-module.exports = router
+module.exports  = {createUser,deleteAllUsers,getAllUsers,login};

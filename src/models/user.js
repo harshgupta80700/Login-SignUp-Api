@@ -2,7 +2,7 @@ const validator =  require('validator')
 const mongoose =  require('mongoose')
 
 
-const userScehema = new  mongoose.Schema(
+const userScehema = new mongoose.Schema(
     {
         name:{
             type: String,
@@ -13,6 +13,7 @@ const userScehema = new  mongoose.Schema(
             type: String,
             required: true,
             trim: true,
+            unique: true,
             validate(value){
                 if(!validator.isEmail(value)){
                     throw Error("Please enter a valid email address")
@@ -25,8 +26,17 @@ const userScehema = new  mongoose.Schema(
             trim: true,
             minlength:[10,"Password too short"]
         },
+        confirmPassword:{
+            type: String,
+            required: true,
+            trim: true,
+            minlength:[10,"Password too short"]
+        }
     }
 )
+
+
+
 
 
 const User =  mongoose.model('User',userScehema)

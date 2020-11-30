@@ -1,7 +1,6 @@
 const validator =  require('validator')
 const mongoose =  require('mongoose')
 
-
 const userScehema = new mongoose.Schema(
     {
         name:{
@@ -26,18 +25,8 @@ const userScehema = new mongoose.Schema(
             trim: true,
             minlength:[10,"Password too short"]
         },
-        confirmPassword:{
-            type: String,
-            required: true,
-            trim: true,
-            minlength:[10,"Password too short"]
-        }
     }
 )
-
-
-
-
 
 const User =  mongoose.model('User',userScehema)
 

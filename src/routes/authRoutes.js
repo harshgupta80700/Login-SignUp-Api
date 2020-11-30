@@ -9,11 +9,11 @@ router.get('/testUser',(req,res)=>{
 
 router.post('/addUser' , Authcontroller.createUser)
 
-router.delete('/deleteAll',Authcontroller.deleteAllUsers)
+router.delete('/deleteAll', Authcontroller.deleteAllUsers)
 
-router.get('/getAllUsers',Authcontroller.getAllUsers)
+router.get('/getAllUsers', Authcontroller.getAllUsers)
 
-router.post('/login',Authcontroller.login)
+router.post('/login', Authcontroller.login)
 
 
 

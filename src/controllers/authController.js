@@ -1,20 +1,22 @@
 const User = require('../models/user')
+const bcryptjs = require('bcryptjs')
 
 
 const createUser = async (req,res,next) => {
-    const user =  new User(req.body)
+    var user =  await User.findOne({email: req.body.email})
     console.log(user)
     try{
-        if(!user){
-            throw Error()
-        }
-        if(req.body.password !== req.body.confirmPassword){
+        if(user){
             res.status(400).json({
                 status: "Error",
-                message: "Password mismatched"
+                message: "Email Already Exist"
             })
             return;
         }
+        user = new User(req.body)
+        const salt = await bcryptjs.genSalt(10)
+        user.password = await bcryptjs.hash(user.password,salt)
+        console.log("password = " + user.password);
         await user.save() 
         console.log("user created")
         res.status(201).json({
@@ -66,6 +68,7 @@ const getAllUsers = async(req,res,next)=>{
 const login = async(req,res,next)=>{
     try{
         const user = await User.findOne({email: req.body.email})
+        console.log(user)
         if(!user){
             res.status(404).json({
                 status: "Error",
@@ -73,16 +76,24 @@ const login = async(req,res,next)=>{
             })
             return;
         }
-        if(user.password !== req.body.password){
+        if(!bcryptjs.compareSync(req.body.password,user.password)){
             res.status(400).json({
                 status: "Error",
                 message: "Password Incorrect"
             })
             return;
         }
-        console.log(user)
+        res.status(200).json({
+            status: "Success",
+            data: user,
+            message: "Login Successful"
+        })
     }catch(e){
-        
+        console.log(e)
+        res.status(200).json({
+            status: "Error",
+            message: "Login Unsuccessful"
+        })
     }
 
 }

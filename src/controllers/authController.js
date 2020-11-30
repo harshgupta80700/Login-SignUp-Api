@@ -1,19 +1,10 @@
 const User = require('../models/user')
 const bcryptjs = require('bcryptjs')
 
-
 const createUser = async (req,res,next) => {
-    var user =  await User.findOne({email: req.body.email})
+    const user = new User(req.body);
     console.log(user)
     try{
-        if(user){
-            res.status(400).json({
-                status: "Error",
-                message: "Email Already Exist"
-            })
-            return;
-        }
-        user = new User(req.body)
         const salt = await bcryptjs.genSalt(10)
         user.password = await bcryptjs.hash(user.password,salt)
         console.log("password = " + user.password);
@@ -68,14 +59,6 @@ const getAllUsers = async(req,res,next)=>{
 const login = async(req,res,next)=>{
     try{
         const user = await User.findOne({email: req.body.email})
-        console.log(user)
-        if(!user){
-            res.status(404).json({
-                status: "Error",
-                message: "User not found"
-            })
-            return;
-        }
         if(!bcryptjs.compareSync(req.body.password,user.password)){
             res.status(400).json({
                 status: "Error",

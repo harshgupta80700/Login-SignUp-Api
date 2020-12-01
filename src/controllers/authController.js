@@ -1,18 +1,27 @@
-const User = require('../models/user')
-const bcryptjs = require('bcryptjs')
+const User = require('../models/user');
+const bcryptjs = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
 
 const createUser = async (req,res,next) => {
-    const user = new User(req.body);
+    var user = new User(req.body);
     console.log(user)
     try{
+        const userTopass = new User({
+            name: user.name,
+            email: user.email
+        })
         const salt = await bcryptjs.genSalt(10)
         user.password = await bcryptjs.hash(user.password,salt)
-        console.log("password = " + user.password);
-        await user.save() 
-        console.log("user created")
+        const token = await jwt.sign(userTopass.toJSON(),process.env.SECRET_KEY,{expiresIn:"1h"});
+        if(!token){
+           throw Error("Token not generated");
+        }
+        await user.save()
         res.status(201).json({
             status: "Success",
-            data: user
+            data: userTopass,
+            token: token
         })
     }catch(e){
         console.log(e)
@@ -23,38 +32,8 @@ const createUser = async (req,res,next) => {
     }
 };
 
-const deleteAllUsers = async(req,res,next)=>{
-    try{
-        await User.deleteMany({})
-        console.log("all deleted")
-        res.status(200).json({
-            status: "success",
-            message: "Db cleared successfully"
-        })
-    }catch(e){
-        res.status(400).json({
-            message: e.message,
-            status: "Error"
-        })
-    }
-}
 
-const getAllUsers = async(req,res,next)=>{
-    try{
-        const users = await User.find({})
-        console.log(users);
-        res.status(200).json({
-            status: "Success",
-            data: users
-        })
-    }catch(e){
-        console.log(e);
-        res.status(200).json({
-            status: "Error",
-            message: e.message
-        })
-    }
-}
+
 
 const login = async(req,res,next)=>{
     try{
@@ -66,10 +45,19 @@ const login = async(req,res,next)=>{
             })
             return;
         }
+        const userTopass = new User({
+            name: user.name,
+            email: user.email
+        })
+        const token = await jwt.sign(userTopass.toJSON(),process.env.SECRET_KEY,{expiresIn:"1h"});
+        if(!token){
+           throw Error("Token not generated");
+        }
         res.status(200).json({
             status: "Success",
-            data: user,
-            message: "Login Successful"
+            data: userTopass,
+            message: "Login Successful",
+            token: token
         })
     }catch(e){
         console.log(e)
@@ -82,4 +70,30 @@ const login = async(req,res,next)=>{
 }
 
 
-module.exports  = {createUser,deleteAllUsers,getAllUsers,login};
+const getUserObject = async(req,res,next) =>{
+    try{
+        const user = await User.findOne({email: req.authData.email})
+        console.log(user);
+        if(!user){
+            throw Error("User not found")
+        }
+        const userTopass = new User({
+            name: user.name,
+            email: user.email
+        })
+        res.status(200).json({
+            status: "Success",
+            message: userTopass,
+        })
+        return;
+    }catch(e){
+        res.status(404).json({
+            status: "Error",
+            message: e.message,
+        })
+        return;
+    }
+}
+
+
+module.exports  = {createUser,login,getUserObject};

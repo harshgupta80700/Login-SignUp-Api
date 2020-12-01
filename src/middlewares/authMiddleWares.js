@@ -1,5 +1,6 @@
 const {validationResult} =  require('express-validator');
 const User = require('../models/user')
+const jwt = require('jsonwebtoken');
 
 
 const checkValidators = async(req,res,next) => {
@@ -44,4 +45,26 @@ const checkLoginEmail = async(req,res,next) =>{
     next();
 }
 
-module.exports = {checkValidators,checkLoginEmail,checkSignUpEmail}
+
+const checkToken = async(req,res,next)=>{
+    try{
+        if(!req.headers.authorization){
+            throw Error("Token not Found!")
+        }
+        const token = req.headers.authorization.split(' ')[1];
+        const isVerified = await jwt.verify(token,process.env.SECRET_KEY);
+        if(!isVerified){
+            throw Error("Invalid Token")
+        }
+        req.authData = {email:isVerified.email};
+        next();
+    }catch(e){
+        res.status(404).json({
+            status: "Error",
+            message: e.message,
+        })
+        return;
+    }
+}
+
+module.exports = {checkValidators,checkLoginEmail,checkSignUpEmail,checkToken}

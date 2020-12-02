@@ -8,41 +8,12 @@ const checkValidators = async(req,res,next) => {
     if(!errors.isEmpty()){
         res.status(400).json({
             status: "Error",
-            message: "Wrong Credentials"
+            errors: errors.array() 
         })
         return;
     }
     next();
     
-}
-
-
-const checkSignUpEmail = async(req,res,next) =>{
-    const user = await User.findOne({email: req.body.email})
-    if(user !== null){
-        console.log("inside email exist validation");
-        res.status(400).json({
-            status: "Error",
-            message: "Email Already Exist"
-        })
-        return;
-    }
-    console.log("next called")
-    next();
-}
-
-const checkLoginEmail = async(req,res,next) =>{
-    const user = await User.findOne({email: req.body.email})
-    if(user === null){
-        console.log("inside email exist validation");
-        res.status(400).json({
-            status: "Error",
-            message: "User not found"
-        })
-        return;
-    }
-    console.log("next called")
-    next();
 }
 
 
@@ -61,10 +32,10 @@ const checkToken = async(req,res,next)=>{
     }catch(e){
         res.status(404).json({
             status: "Error",
-            message: e.message,
+            error: e.message,
         })
         return;
     }
 }
 
-module.exports = {checkValidators,checkLoginEmail,checkSignUpEmail,checkToken}
+module.exports = {checkValidators,checkToken}

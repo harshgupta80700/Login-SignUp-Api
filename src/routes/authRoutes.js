@@ -11,17 +11,17 @@ router.get('/testUser',(req,res)=>{
 
 //Sign Up Route
 router.post('/addUser',[
-    check('email').trim().isEmail(),
-    check('password').trim().isLength({min:10}),
+    check('email',"Please enter a valid email").trim().isEmail(),
+    check('password',"Please enter a valid password").trim().isLength({min:10}),
     check('name').trim()
-], authMiddleWares.checkValidators,authMiddleWares.checkSignUpEmail, Authcontroller.createUser)
+], authMiddleWares.checkValidators,Authcontroller.createUser)
 
 
 //Login Route
 router.post('/login',[
-    check('email').trim().isEmail(),
-    check('password').trim().isLength({min:10})
-],authMiddleWares.checkValidators,authMiddleWares.checkLoginEmail, Authcontroller.login)
+    check('email',"Please enter a valid email").trim().isEmail(),
+    check('password',"Please enter a valid password").trim().isLength({min:10})
+],authMiddleWares.checkValidators, Authcontroller.login)
 
 
 //checks token

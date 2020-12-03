@@ -4,7 +4,7 @@ const getUserTodos = async(req,res,next) => {
     try{
         const todos = await Todos.find({userid: req.authData.id});
         if(!todos){
-            throw Error("Something went wrong");
+            throw Error("Todos not found");
         }
         res.status(200).json({
             status: "Success",
@@ -24,7 +24,7 @@ const getUserTodos = async(req,res,next) => {
 const createUserTodo = async(req,res,next) => {
     try{
         const todo = new Todos(req.body);
-        todo.userid = req.authData.id
+        todo.userid = req.authData.id;
         await todo.save();
         res.status(201).json({
             status: "Success",
@@ -34,26 +34,26 @@ const createUserTodo = async(req,res,next) => {
         res.status(201).json({
             status: "Error",
             error: e.message
-        })
+        });
     }
 }
 
 
 const deleteUserTodo = async(req,res,next) => {
     try{
-        const todo = await Todos.findByIdAndDelete(req.body.id)
+        const todo = await Todos.findByIdAndDelete(req.body.id);
         if(!todo){
             throw Error("Todo not found");
         }
         res.status(201).json({
             status: "Success",
             message: "Todo deleted successfully"
-        })
+        });
     }catch(e){
         res.status(201).json({
             status: "Error",
             error: e.message
-        })
+        });
     }
 }
 
@@ -73,13 +73,13 @@ const updateUserTodo = async(req,res,next) => {
             status: "Success",
             message: "Todo Updated successfully",
             data: updatedTodo
-        })
+        });
     }catch(e){
         console.log("error catched");
         res.status(201).json({
             status: "Error",
             error: e.message
-        })
+        });
     }
 }
 

@@ -16,8 +16,8 @@ const userScehema = new mongoose.Schema(
             required: true,
         },
     }
-)
+);
 
-const User =  mongoose.model('User',userScehema)
+const User =  mongoose.model('User',userScehema);
 
-module.exports = User
+module.exports = User;

@@ -14,7 +14,7 @@ const todoSchema = new mongoose.Schema({
         type: String,
         enum:['max','mid','low']
     }
-})
+});
 
 const Todos = mongoose.model('Todo',todoSchema);
 

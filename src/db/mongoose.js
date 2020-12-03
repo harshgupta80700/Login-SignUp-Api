@@ -1,11 +1,12 @@
-const mongoose =  require('mongoose')
+const mongoose =  require('mongoose');
 
-const db =  'mongodb://127.0.0.1:27017/login_signUp_db'
+const db = process.env.DATABASE_URL;
 
 mongoose.connect(db,{
     useNewUrlParser: true,
     useCreateIndex: true,
-    useFindAndModify: false
+    useFindAndModify: false,
+    useUnifiedTopology: true
 }).then(()=>{
     console.log("DB connected");
 }).catch(e =>{

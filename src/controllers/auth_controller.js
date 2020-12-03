@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 
 const createUser = async (req,res,next) => {
     try{
-        var user = await User.findOne({email: req.body.email})
+        var user = await User.findOne({email: req.body.email});
         if(user !== null){
            throw Error("Email Already Exist");
         }
@@ -14,25 +14,24 @@ const createUser = async (req,res,next) => {
             id: user._id,
             name: user.name,
             email: user.email
-        }
-        const salt = await bcryptjs.genSalt(10)
-        user.password = await bcryptjs.hash(user.password,salt)
+        };
+        const salt = await bcryptjs.genSalt(10);
+        user.password = await bcryptjs.hash(user.password,salt);
         const token = await jwt.sign(payload,process.env.SECRET_KEY,{expiresIn:process.env.JWT_EXPIRY});
         if(!token){
            throw Error("Token not generated");
         }
-        await user.save()
+        await user.save();
         res.status(201).json({
             status: "Success",
             data: payload,
             token: token
-        })
+        });
     }catch(e){
-        console.log(e)
         res.status(400).json({
             status: "Error",
             error: e.message
-        })
+        });
     }
 };
 
@@ -41,9 +40,8 @@ const createUser = async (req,res,next) => {
 
 const login = async(req,res,next)=>{
     try{
-        const user = await User.findOne({email: req.body.email})
+        const user = await User.findOne({email: req.body.email});
         if(user === null){
-            console.log("inside email exist validation");
             throw Error("User not Found");
         }
         if(!bcryptjs.compareSync(req.body.password,user.password)){
@@ -53,7 +51,7 @@ const login = async(req,res,next)=>{
             id: user._id,
             name: user.name,
             email: user.email
-        }
+        };
         const token = await jwt.sign(payload,process.env.SECRET_KEY,{expiresIn:process.env.JWT_EXPIRY});
         if(!token){
            throw Error("Token not generated");
@@ -62,13 +60,13 @@ const login = async(req,res,next)=>{
             status: "Success",
             message: "Login Successful",
             token: token
-        })
+        });
     }catch(e){
         console.log(e)
         res.status(200).json({
             status: "Error",
             error: e.message
-        })
+        });
     }
 
 }
@@ -76,28 +74,25 @@ const login = async(req,res,next)=>{
 
 const getUserObject = async(req,res,next) =>{
     try{
-        const user = await User.findOne({email: req.authData.email})
-        console.log(user);
+        const user = await User.findOne({email: req.authData.email});
         if(!user){
-            throw Error("User not found")
+            throw Error("User not found");
         }
         const userTopass = {
             name: user.name,
             email: user.email
-        }
+        };
         res.status(200).json({
             status: "Success",
             data: userTopass,
-        })
-        return;
+        });
     }catch(e){
         res.status(404).json({
             status: "Error",
             error: e.message,
-        })
-        return;
+        });
     }
 }
 
 
-module.exports  = {createUser,login,getUserObject};
+module.exports = {createUser,login,getUserObject};

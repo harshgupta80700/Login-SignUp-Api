@@ -17,7 +17,7 @@ const createUser = async (req,res,next) => {
         }
         const salt = await bcryptjs.genSalt(10)
         user.password = await bcryptjs.hash(user.password,salt)
-        const token = await jwt.sign(payload,process.env.SECRET_KEY,{expiresIn:"1h"});
+        const token = await jwt.sign(payload,process.env.SECRET_KEY,{expiresIn:process.env.JWT_EXPIRY});
         if(!token){
            throw Error("Token not generated");
         }
@@ -54,7 +54,7 @@ const login = async(req,res,next)=>{
             name: user.name,
             email: user.email
         }
-        const token = await jwt.sign(payload,process.env.SECRET_KEY,{expiresIn:"1h"});
+        const token = await jwt.sign(payload,process.env.SECRET_KEY,{expiresIn:process.env.JWT_EXPIRY});
         if(!token){
            throw Error("Token not generated");
         }

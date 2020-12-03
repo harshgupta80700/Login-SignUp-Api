@@ -3,7 +3,6 @@ const router = express.Router();
 const todoController = require('../controllers/todo-controller');
 const {check} =  require('express-validator');
 const authMiddleWare = require("../middlewares/authMiddleWares");
-const { values } = require('lodash');
 
 router.get('/getUserTodos',authMiddleWare.checkToken,todoController.getUserTodos)
 

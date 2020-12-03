@@ -1,10 +1,9 @@
 const mongoose = require('mongoose');
 
 const todoSchema = new mongoose.Schema({
-    // userid:{
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'User'
-    // },
+    userid:{
+        type: String,
+    },
     title:{
         type: String,
     },

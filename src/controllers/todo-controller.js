@@ -1,7 +1,22 @@
 const Todos = require('../models/todo');
-const Users = require('../models/user');
 
 const getUserTodos = async(req,res,next) => {
+    try{
+        const todos = await Todos.find({userid: req.authData.id});
+        if(!todos){
+            throw Error("Something went wrong");
+        }
+        res.status(200).json({
+            status: "Success",
+            length: todos.length,
+            data: todos
+        });
+    }catch(e){
+        res.status(400).json({
+            status: "Error",
+            error: e.message
+        });
+    }
 
 }
 
@@ -9,6 +24,7 @@ const getUserTodos = async(req,res,next) => {
 const createUserTodo = async(req,res,next) => {
     try{
         const todo = new Todos(req.body);
+        todo.userid = req.authData.id
         await todo.save();
         res.status(201).json({
             status: "Success",

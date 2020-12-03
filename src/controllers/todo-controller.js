@@ -9,7 +9,6 @@ const getUserTodos = async(req,res,next) => {
 const createUserTodo = async(req,res,next) => {
     try{
         const todo = new Todos(req.body);
-        console.log(todo);
         await todo.save();
         res.status(201).json({
             status: "Success",
@@ -30,7 +29,6 @@ const deleteUserTodo = async(req,res,next) => {
         if(!todo){
             throw Error("Todo not found");
         }
-        console.log(todo);
         res.status(201).json({
             status: "Success",
             message: "Todo deleted successfully"
@@ -46,20 +44,22 @@ const deleteUserTodo = async(req,res,next) => {
 
 const updateUserTodo = async(req,res,next) => {
     try{
-        const todo = await Todos.findByIdAndUpdate(req.body.id,{
+        var updatedTodo = {
             title: req.body.title,
             description: req.body.description,
             priority : req.body.priority
-        })
+        };
+        const todo = await Todos.findByIdAndUpdate(req.body.id,updatedTodo);
         if(!todo){
             throw Error("Todo not found");
         }
-        console.log(todo);
         res.status(201).json({
             status: "Success",
-            message: "Todo Updated successfully"
+            message: "Todo Updated successfully",
+            data: updatedTodo
         })
     }catch(e){
+        console.log("error catched");
         res.status(201).json({
             status: "Error",
             error: e.message

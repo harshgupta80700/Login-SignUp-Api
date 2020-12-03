@@ -13,7 +13,9 @@ router.post("/addTodo",[
     check('priority',"Enter a valid priority").isIn(['max','min','mid'])
 ],authMiddleWare.checkValidators,authMiddleWare.checkToken,todoController.createUserTodo)
 
-router.delete("/deleteTodo",authMiddleWare.checkToken,todoController.deleteUserTodo);
+router.delete("/deleteTodo",[
+    check('id',"Id is required").not().isEmpty(),
+],authMiddleWare.checkValidators,authMiddleWare.checkToken,todoController.deleteUserTodo);
 
 router.put("/updateTodo",[
     check('id',"Id is required").not().isEmpty(),

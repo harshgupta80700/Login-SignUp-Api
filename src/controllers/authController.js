@@ -11,6 +11,7 @@ const createUser = async (req,res,next) => {
         }
         user = new User(req.body);
         const payload = {
+            id: user._id,
             name: user.name,
             email: user.email
         }
@@ -49,6 +50,7 @@ const login = async(req,res,next)=>{
             throw Error("Password not correct");
         }
         const payload = {
+            id: user._id,
             name: user.name,
             email: user.email
         }

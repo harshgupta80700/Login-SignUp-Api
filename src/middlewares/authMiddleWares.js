@@ -27,7 +27,7 @@ const checkToken = async(req,res,next)=>{
         if(!isVerified){
             throw Error("Invalid Token")
         }
-        req.authData = {email:isVerified.email};
+        req.authData = {email:isVerified.email,id:isVerified.id};
         next();
     }catch(e){
         res.status(404).json({

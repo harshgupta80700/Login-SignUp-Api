@@ -1,16 +1,22 @@
 const mongoose = require('mongoose');
 
 const todoSchema = new mongoose.Schema({
-    userid:{
-        type: mongoose.Schema.Types.ObjectId
-    },
+    // userid:{
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'User'
+    // },
     title:{
         type: String,
     },
     description:{
         type: String
     },
-    status:{
-        type:Boolean
+    priority:{
+        type: String,
+        enum:['max','mid','low']
     }
 })
+
+const Todos = mongoose.model('Todo',todoSchema);
+
+module.exports = Todos;

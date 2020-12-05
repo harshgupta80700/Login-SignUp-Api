@@ -18,18 +18,11 @@ router.post("/addTodo",[
 
 
 //delete user todo
-router.delete("/deleteTodo",[
-    check('id',"Id is required").trim().not().isEmpty(),
-],validators.checkValidators,authMiddleWare.protect,todoController.deleteUserTodo);
+router.delete("/:id",authMiddleWare.protect,todoController.deleteUserTodo);
 
 
 //update user todo
-router.put("/updateTodo",[
-    check('id',"Id is required").trim().not().isEmpty(),
-    check('title','Title is required').trim().not().isEmpty(),
-    check('description',"Description is required").trim().not().isEmpty(),
-    check('priority',"Enter a valid priority").trim().isIn(['max','min','mid'])
-],validators.checkValidators,authMiddleWare.protect,todoController.updateUserTodo);
+router.put("/:id", authMiddleWare.protect, todoController.updateUserTodo);
 
 
 

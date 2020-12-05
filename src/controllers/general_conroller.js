@@ -21,9 +21,10 @@ const getAllUsers = async(req,res,next)=>{
 const deleteAllUsers = async(req,res,next)=>{
     try{
         await User.deleteMany({});
+        await Todos.deleteMany({});
         res.status(200).json({
             status: "success",
-            message: " Users deleted successfully"
+            message: " Db cleared successfully"
         });
     }catch(e){
         res.status(400).json({

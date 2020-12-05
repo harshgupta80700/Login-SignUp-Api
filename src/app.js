@@ -13,7 +13,7 @@ const port = process.env.PORT || 3000
 
 app.use("/",authRoutes);
 app.use("/general",generalRoutes);
-app.use("/user",todoRoutes);
+app.use("/todo",todoRoutes);
 
 
 app.listen(port,()=>{

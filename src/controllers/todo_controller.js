@@ -2,7 +2,9 @@ const Todos = require('../models/todo');
 
 const getUserTodos = async(req,res,next) => {
     try{
+        console.log("route called");
         const todos = await Todos.find({userid: req.authData.id});
+        console.log(todos);
         if(!todos){
             throw Error("Todos not found");
         }
@@ -41,7 +43,7 @@ const createUserTodo = async(req,res,next) => {
 
 const deleteUserTodo = async(req,res,next) => {
     try{
-        const todo = await Todos.findByIdAndDelete(req.body.id);
+        const todo = await Todos.findByIdAndDelete(req.params.id);
         if(!todo){
             throw Error("Todo not found");
         }
@@ -60,19 +62,15 @@ const deleteUserTodo = async(req,res,next) => {
 
 const updateUserTodo = async(req,res,next) => {
     try{
-        var updatedTodo = {
-            title: req.body.title,
-            description: req.body.description,
-            priority : req.body.priority
-        };
-        const todo = await Todos.findByIdAndUpdate(req.body.id,updatedTodo);
+        let todo = await Todos.findByIdAndUpdate(req.params.id,req.body);
         if(!todo){
             throw Error("Todo not found");
         }
+        todo = await Todos.findById(req.params.id);
         res.status(201).json({
             status: "Success",
             message: "Todo Updated successfully",
-            data: updatedTodo
+            data: todo   
         });
     }catch(e){
         console.log("error catched");

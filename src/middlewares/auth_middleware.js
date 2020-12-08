@@ -13,7 +13,7 @@ const protect = async(req,res,next)=>{
         req.authData = {email:isVerified.email,id:isVerified.id};
         next();
     }catch(e){
-        res.status(404).json({
+        res.status(401).json({
             status: "Error",
             error: e.message,
         })
